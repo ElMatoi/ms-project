@@ -6,6 +6,7 @@ import { ProjectService } from "src/projects/projects.service";
 import { ProjectTeamService } from "src/projects/teamproject.services";
 import { TaskService } from "src/tasks/task.services";
 import { CreateTaskDto } from "./dto/createTask.dto";
+import { getProjectUser } from "./dto/getProjectUser.dto";
 import axios from 'axios';
 
 
@@ -93,20 +94,43 @@ export class AuthService{
           state,
           comment
         })
-           
-          
-        return true;
-
+          return true;
         } catch (error) {
           console.error(error);
-          
           throw new Error('Error, ups algo fallo...');
         }
-
-        
       }
+      ////////////////////////////////////////////////////////////
+      async getProjectUser({email}: getProjectUser) {
+        try {
+            const userResponse = await axios.post('http://localhost:3000/api/v1/auth/catchUser', {
+                email: email
+            });
+            const idUser = userResponse.data;
+            console.log(idUser);
+    
+            try {
+                const response = await axios.post('http://localhost:3000/api/v1/auth/getProjectUser', {
+                    idUser: idUser 
+                });
+    
+                console.log(response.data);
+                
+                const teamproject = response.data;
+                const projects = await this.tprojService.findUserTeamIdAndProjectId(teamproject);
+                return projects;
+            } catch (innerError) {
+                console.error('Hubo un error con la petición interna:', innerError);
+            }
+    
+        } catch (error) {
+            throw new Error('Error, ups algo fallo...user sin equipo');
+        }
+    }
+    
 
-  }
+}
+    
   
   
   

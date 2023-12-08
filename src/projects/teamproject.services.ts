@@ -24,46 +24,37 @@ export class ProjectTeamService {
   
       return projectTeam || null;
     } catch (error) {
-      // Manejar errores si es necesario
+      
       console.error("Error ", error);
       return null;
     
     }
   }
+  async findUserTeamIdAndProjectId(userTeamId: number): Promise<string[]> {
+    const teamprojects = await this.teamprojectRepository.find({
+        where: { idUserTeam: userTeamId },
+        relations: ['project']
+    });
 
-  async findOneByUserteamIdAndOptionalProjectId(userteamId: number, projectId?: number): Promise<Teamproject | null> {
-    try {
-      let whereClause: Record<string, any> = { userTeam: { id: userteamId } };
-  
-      if (projectId) {
-        whereClause = { ...whereClause, project: { id: projectId } };
-      }
-  
-      const projectTeam = await this.teamprojectRepository.findOne({
-        where: whereClause,
-        relations: ['userTeam'], // Asegúrate de que la relación esté cargada
-      });
-  
-      return projectTeam || null;
-    } catch (error) {
-      // Manejar errores si es necesario
-      console.error("Error ", error);
-      return null;
-    }
-  }
-  
-  
-  
-
-    
-
- 
-
-
-  
-
- 
+    return teamprojects.map(tp => tp.project.name);
 }
+
+}
+
+ 
+  
+  
+  
+
+    
+
+ 
+
+
+  
+
+ 
+
 
 
 
