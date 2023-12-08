@@ -19,12 +19,21 @@ export class AuthService{
       private readonly taskService: TaskService,
       ){} 
       /////////////////////////////////////////////////////////////////////////////////////
-      async createProject({name}:CreateProjectDto){ //create project
-       const createProject =await this.projectsService.createProject({
-        name
-        });
-        return true;
+      async createProject({name}: CreateProjectDto) {
+        try {
+          
+          const createProject = await this.projectsService.createProject({
+            name
+          });
+          return true;
+        } catch (error) {
+          
+          console.error('Ocurrió un error al crear el proyecto:', error);
+          
+          return false;
+        }
       }
+      
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
       async addProjectTeam({ nameProject,email,name, description, startDate, endDate }: TeamProjectDto) {
         try {
@@ -68,6 +77,7 @@ export class AuthService{
           console.error(error);
           
           throw new Error('Error, ups algo fallo...');
+          return false;
         }
       
      }
@@ -97,7 +107,8 @@ export class AuthService{
           return true;
         } catch (error) {
           console.error(error);
-          throw new Error('Error, ups algo fallo...');
+          throw new Error('Error, Usuario sin equipo');
+          return false;
         }
       }
       ////////////////////////////////////////////////////////////
@@ -124,7 +135,9 @@ export class AuthService{
             }
     
         } catch (error) {
+          
             throw new Error('Error, ups algo fallo...user sin equipo');
+            return false;
         }
     }
     
