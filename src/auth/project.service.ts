@@ -118,18 +118,20 @@ export class AuthService{
                 email: email
             });
             const idUser = userResponse.data;
-            console.log(idUser);
+           // console.log(idUser);
     
             try {
                 const response = await axios.post('http://localhost:3000/api/v1/auth/getProjectUser', {
                     idUser: idUser 
                 });
     
-                console.log(response.data);
+                
                 
                 const teamproject = response.data;
                 const projects = await this.tprojService.findUserTeamIdAndProjectId(teamproject);
+                //console.log(projects);
                 return projects;
+               
             } catch (innerError) {
                 console.error('Hubo un error con la petición interna:', innerError);
             }

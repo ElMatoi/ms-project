@@ -30,14 +30,31 @@ export class ProjectTeamService {
     
     }
   }
-  async findUserTeamIdAndProjectId(userTeamId: number): Promise<string[]> {
-    const teamprojects = await this.teamprojectRepository.find({
-        where: { idUserTeam: userTeamId },
-        relations: ['project']
-    });
+  async findUserTeamIdAndProjectId(userTeamId: number): Promise<any[]> {
+    try {
+        const teamprojects = await this.teamprojectRepository.find({
+            where: { idUserTeam: userTeamId },
+            relations: ['project']
+        });
 
-    return teamprojects.map(tp => tp.project.name);
+        const result = teamprojects.map(tp => ({
+            teamProjectId: tp.id,
+            teamProjectDescription: tp.description,
+            teamProjectStartDate: tp.startDate,
+            teamProjectEndDate: tp.endDate,
+            teamProjectProjectId: tp.project.id,
+            teamProjectUserId: tp.idUserTeam,
+            projectName: tp.project.name
+        }));
+
+        return result;
+    } catch (error) {
+        console.error("Error  ", error);
+        return null;
+    }
 }
+
+
 
 }
 
