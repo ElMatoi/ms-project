@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Comment } from './entities/comment.entity';
 import { CreateCommentDto } from './dto/createcomment.dto';
@@ -27,4 +27,18 @@ export class CommentService {
       return null;
     }
   }
+  async updateCommentByTaskId(taskId: number, editComment: string): Promise<UpdateResult | null> {
+    try {
+      const result = await this.commentRepository.update(
+        { task: { id: taskId } },
+        { comment: editComment }
+      );
+
+      return result;
+    } catch (error) {
+      console.error('Error al actualizar comentario de la tarea:', error);
+      return null;
+    }
+  }
+  
 }

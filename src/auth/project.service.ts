@@ -13,6 +13,7 @@ import { DeleteTaskProject } from "./dto/deleteTaskProject.dto";
 import { newCommentDto } from "./dto/newComment.dto";
 import { CommentService } from "src/comments/comments.service";
 import { getCommentTask } from "./dto/getCommentTask.dto";
+import { EditCommentTaskDto } from "./dto/editComment.dto";
 import axios from 'axios';
 
 
@@ -235,6 +236,17 @@ export class AuthService{
         
         
         
+      }catch(error){
+        throw new Error('Error, ups algo fallo... no existe la tarea ');
+
+      }
+      
+    }
+    async editCommentTask ({idTask,editComment}:EditCommentTaskDto){
+     
+      try{
+        const updateComment= await this.commentService.updateCommentByTaskId(idTask,editComment)
+        return true;
       }catch(error){
         throw new Error('Error, ups algo fallo... no existe la tarea ');
 

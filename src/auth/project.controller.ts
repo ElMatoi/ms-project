@@ -8,6 +8,7 @@ import { getTaskProject } from "./dto/getTaskProject.dto";
 import { DeleteTeamProject } from "./dto/deleteTeamProject.dto";
 import { newCommentDto } from "./dto/newComment.dto";
 import { getCommentTask } from "./dto/getCommentTask.dto";
+import { EditCommentTaskDto } from "./dto/editComment.dto";
 
 
 @Controller('auth') 
@@ -113,6 +114,18 @@ async getComentTask(
 ) {
     try {
         const comment = await this.authService.getCommentTask(getcomenttask);
+        return comment
+    } catch (error) {
+        console.error('Error no hay team:', error);
+        throw new HttpException('Error ', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+@Post('editComment')
+async editComment(
+    @Body() editcomenttask: EditCommentTaskDto
+) {
+    try {
+        const comment = await this.authService.editCommentTask(editcomenttask)
         return comment
     } catch (error) {
         console.error('Error no hay team:', error);
