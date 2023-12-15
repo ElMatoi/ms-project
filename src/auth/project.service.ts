@@ -9,6 +9,7 @@ import { CreateTaskDto } from "./dto/createTask.dto";
 import { getProjectUser } from "./dto/getProjectUser.dto";
 import { getTaskProject } from "./dto/getTaskProject.dto";
 import { DeleteTeamProject } from "./dto/deleteTeamProject.dto";
+import { DeleteTaskProject } from "./dto/deleteTaskProject.dto";
 import axios from 'axios';
 
 
@@ -30,7 +31,7 @@ export class AuthService{
           return true;
         } catch (error) {
           
-          console.error('Ocurrió un error al crear el proyecto:', error);
+          throw new Error('Error, ups algo fallo...');
           
           return false;
         }
@@ -76,7 +77,7 @@ export class AuthService{
             return true;
             
           }catch (error) {
-            console.error("Error no hay projecto creado ", error);
+            throw new Error('Error, ups algo fallo...');
           }
           
         } catch (error) {
@@ -168,12 +169,30 @@ export class AuthService{
 
     async deleteTeamProject({idUserTeam}:DeleteTeamProject){
       try{
-        await this.tprojService.deleteByUserTeamId(idUserTeam)
+        const idteamproject= await this.tprojService.findOneByUserIdTeam(idUserTeam);
+        await this.taskService.removeTasksByTeamprojectId(idteamproject.id);
+        await this.tprojService.remove(idteamproject.id);
+        return true;
         
 
       }catch(error){
         throw new Error('Error, ups algo fallo... ');
       }
+    }
+
+    async deleteTaskProject({name}:DeleteTaskProject){
+      try{
+        const task= await this.taskService.findTasksByName(name);
+        return true;
+
+
+        
+
+      }catch(error){
+        throw new Error('Error, ups algo fallo... ');
+      }
+
+
     }
     
 

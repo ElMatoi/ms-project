@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Teamproject } from './entities/teamproject.entity';
 import { CreateTeamProjectDto } from './dto/create-teamproject.dto';
+import { DeleteResult } from 'typeorm';
 
 
 @Injectable()
@@ -30,6 +31,22 @@ export class ProjectTeamService {
     
     }
   }
+  async findOneByUserIdTeam(idUserTeam: number): Promise<Teamproject | null> {
+    try {
+      const teamproject = await this.teamprojectRepository.findOne({
+        where: { idUserTeam },
+        relations: ['project'], // Si necesitas traer la relación con el proyecto
+      });
+
+      return teamproject || null;
+    } catch (error) {
+      console.error('Error al buscar Teamproject por idUserTeam: ', error);
+      return null;
+    }
+  }
+
+
+
 
   
   async findUserTeamIdAndProjectId(userTeamId: number): Promise<any[]> {
@@ -57,24 +74,35 @@ export class ProjectTeamService {
 }
 
 
-
-
-async deleteByUserTeamId(userTeamId: number): Promise<void> {
+async remove(idTeamProject: number): Promise<DeleteResult> {
   try {
-    const result = await this.teamprojectRepository.delete({ idUserTeam: userTeamId });
+    const result = await this.teamprojectRepository.delete(idTeamProject);
 
     if (result.affected === 0) {
-      throw new NotFoundException(`Error, no se encontro el team`);
+      throw new NotFoundException('No existe proyecto para el equipo');
     }
+
+    return result;
   } catch (error) {
-    console.error('Error al eliminar registros en Teamproject por userTeamId:', error);
-    throw error; 
+    console.error('Error al eliminar el Teamproject: ', error);
+    throw error;
   }
 }
 
 
 
+
+
+
+
+
+
+
+
 }
+
+
+
 
  
   
