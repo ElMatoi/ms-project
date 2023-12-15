@@ -1,5 +1,6 @@
 
 import { Teamproject } from "src/projects/entities/teamproject.entity";
+import { Project } from 'src/projects/entities/project.entity';
 
 export class CreateTaskDto {
   name:string;
@@ -11,4 +12,5 @@ export class CreateTaskDto {
   endDate: string; 
   state: string;
   comment: string;  
+  project:Project
   }

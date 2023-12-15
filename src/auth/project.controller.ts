@@ -4,6 +4,7 @@ import { CreateProjectDto } from "./dto/createProject.dto";
 import { TeamProjectDto } from "./dto/teamProject.dto";
 import { CreateTaskDto } from "./dto/createTask.dto";
 import { getProjectUser } from "./dto/getProjectUser.dto";
+import { getTaskProject } from "./dto/getTaskProject.dto";
 
 
 @Controller('auth') 
@@ -67,6 +68,18 @@ async getProjectUser(
     }
 }
 
+@Post('getTaskProject')
+async getTaskProject(
+    @Body() gettaskproject: getTaskProject
+) {
+    try {
+        const taskproject = await this.authService.getTaskProject(gettaskproject);
+        return taskproject
+    } catch (error) {
+        console.error('Error al obtener tareas del projecto:', error);
+        throw new HttpException('Error al obtener tareas del projecto', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
    
     
     

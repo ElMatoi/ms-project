@@ -1,6 +1,7 @@
-import { Column, DeleteDateColumn, Entity, ManyToOne, JoinColumn } from 'typeorm';
+import { Column, Entity,  ManyToOne,JoinColumn} from 'typeorm';
 
 import { Teamproject } from 'src/projects/entities/teamproject.entity';
+
 
 @Entity()
 export class Task {
@@ -23,6 +24,12 @@ export class Task {
   state: string;
   @Column({ length: 500 })
   comment: string;
+
+  
+
+  @ManyToOne(()=>Teamproject, teamproject=> teamproject.task)
+  @JoinColumn({name:'teamProjectId'})
+  teamproject: Teamproject;
 
   
 }

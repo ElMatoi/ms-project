@@ -7,6 +7,7 @@ import { ProjectTeamService } from "src/projects/teamproject.services";
 import { TaskService } from "src/tasks/task.services";
 import { CreateTaskDto } from "./dto/createTask.dto";
 import { getProjectUser } from "./dto/getProjectUser.dto";
+import { getTaskProject } from "./dto/getTaskProject.dto";
 import axios from 'axios';
 
 
@@ -35,7 +36,7 @@ export class AuthService{
       }
       
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-      async addProjectTeam({ nameProject,email,name, description, startDate, endDate }: TeamProjectDto) {
+      async addProjectTeam({ nameProject,email,name, description, startDate, endDate,status }: TeamProjectDto) {
         try {
           const [userResponse, teamResponse] = await Promise.all([
             axios.post('http://localhost:3000/api/v1/auth/catchUser', { email: email }),
@@ -61,17 +62,25 @@ export class AuthService{
           });
           const idUserTeam= responseThree.data;
           console.log(idUserTeam)
-          const project = await this.projectsService.findOneByName(nameProject);
-          console.log(project);
+          try {
+            const project = await this.projectsService.findOneByName(nameProject);
+            const createTeamProject = await this.tprojService.createProject({
+              idUserTeam,
+              project,
+              description,
+              startDate,
+              endDate,
+              status
+            });
+            return true;
+            
+          }catch (error) {
+            console.error("Error no hay projecto creado ", error);
+          }
+          
+          
 
-          const createTeamProject = await this.tprojService.createProject({
-          idUserTeam,
-          project,
-          description,
-          startDate,
-          endDate 
-        });
-        return true;
+          
 
         } catch (error) {
           console.error(error);
@@ -92,6 +101,8 @@ export class AuthService{
         const iduserCharge = userResponse.data; 
         const iduserCreator =userCreatorResponse.data;   
         const project= await this.projectsService.findOneByName(nameProject);
+        
+
         const teamproject= await this.tprojService.findOneByTeamIdAndProjectId(project.id);
         const createTask= await this.taskService.create({
           name,
@@ -102,7 +113,8 @@ export class AuthService{
           startDate,
           endDate,
           state,
-          comment
+          comment,
+          project
         })
           return true;
         } catch (error) {
@@ -141,6 +153,19 @@ export class AuthService{
             throw new Error('Error, ups algo fallo...user sin equipo');
             return false;
         }
+    }
+
+    /////////////////////////////////////////////////////////////////
+    async getTaskProject({idTeamProject}:getTaskProject){
+      try{
+        const taskproject= await this.taskService.findTaskWithTeamProjectAttributes(idTeamProject);
+        return taskproject;
+
+      }catch(error){
+        throw new Error('Error, ups algo fallo... projecto sin tareas');
+
+      }
+
     }
     
 

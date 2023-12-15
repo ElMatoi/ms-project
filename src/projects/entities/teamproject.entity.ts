@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToMany, PrimaryGeneratedColumn, JoinColumn, ManyToOne,OneToMany } from 'typeorm';
+import { Entity, Column, ManyToMany, PrimaryGeneratedColumn, JoinColumn, ManyToOne, } from 'typeorm';
 
 import { Project } from './project.entity';
 import { Task } from 'src/tasks/entities/task.entity';
@@ -21,8 +21,15 @@ export class Teamproject {
   @Column()
   idUserTeam: number;
 
+  @Column()
+  status: string;
+
   @ManyToOne(() => Project, project => project.teamprojects)
   @JoinColumn({ name: 'projectId' })
   project: Project;
 
+  
+ 
+  @ManyToMany(() => Task, task => task.teamproject)
+  task: Task[];
 }

@@ -20,17 +20,10 @@ export class ProjectService {
   findOneByName(name: string){
     return this.projectRepository.findOneBy({name})
   }
-  
-
   async findAll() {
     return this.projectRepository.find();
   }
-
-
-
   
-
- 
 }
 
 

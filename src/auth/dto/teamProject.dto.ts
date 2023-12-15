@@ -22,6 +22,8 @@ export class TeamProjectDto {
     message: 'Invalid date format. Use dd-mm-yyyy.',
   })
   startDate: string;
+  @IsString()
+  status:string;
 
   @IsString()
   @Validate(isValidDateFormat, {

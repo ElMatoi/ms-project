@@ -7,7 +7,8 @@ export class CreateTeamProjectDto {
     project: Project;
     description: string;
     startDate: string; 
-    endDate: string;   
+    endDate: string; 
+    status:string; 
     
     
 }

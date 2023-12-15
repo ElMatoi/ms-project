@@ -7,7 +7,10 @@ function isValidDateFormat(value: string): boolean {
 
 export class CreateTaskDto {
  @IsString()
-  name:string;
+ name:string;
+
+
+ 
   @IsEmail()
   email: string;
   @IsEmail()
