@@ -6,6 +6,8 @@ import { CreateTaskDto } from "./dto/createTask.dto";
 import { getProjectUser } from "./dto/getProjectUser.dto";
 import { getTaskProject } from "./dto/getTaskProject.dto";
 import { DeleteTeamProject } from "./dto/deleteTeamProject.dto";
+import { newCommentDto } from "./dto/newComment.dto";
+import { getCommentTask } from "./dto/getCommentTask.dto";
 
 
 @Controller('auth') 
@@ -93,6 +95,32 @@ async deleteTeamProject(
         throw new HttpException('Error ', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+@Post('newComment')
+async newComent(
+    @Body() newcoment: newCommentDto
+) {
+    try {
+        const comment = await this.authService.newComment(newcoment)
+        return comment
+    } catch (error) {
+        console.error('Error no hay team:', error);
+        throw new HttpException('Error ', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+@Post('getCommentTask')
+async getComentTask(
+    @Body() getcomenttask: getCommentTask
+) {
+    try {
+        const comment = await this.authService.getCommentTask(getcomenttask);
+        return comment
+    } catch (error) {
+        console.error('Error no hay team:', error);
+        throw new HttpException('Error ', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
+
+
    
     
     

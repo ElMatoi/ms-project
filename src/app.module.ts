@@ -4,6 +4,7 @@ import { AuthModule } from './auth/project.module';
 import * as express from 'express';
 import { ProjectsModule } from './projects/projects.module';
 import { TeamProjectModule } from './projects/teamproject.module';
+import { CommentModule } from './comments/comments.module';
 
 
 
@@ -13,6 +14,7 @@ import { TeamProjectModule } from './projects/teamproject.module';
     
     ProjectsModule,
     TeamProjectModule,
+    CommentModule,
     AuthModule,
     
     TypeOrmModule.forRoot({

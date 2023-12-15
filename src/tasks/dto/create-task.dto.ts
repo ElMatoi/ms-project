@@ -12,5 +12,6 @@ export class CreateTaskDto {
   endDate: string; 
   state: string;
   comment: string;  
-  project:Project
+  project:Project;
+  priority:number
   }

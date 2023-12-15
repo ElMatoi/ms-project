@@ -1,5 +1,5 @@
-import { Column, Entity,  ManyToOne,JoinColumn} from 'typeorm';
-
+import { Column, Entity,  ManyToOne,JoinColumn,ManyToMany} from 'typeorm';
+import { Comment } from 'src/comments/entities/comment.entity';
 import { Teamproject } from 'src/projects/entities/teamproject.entity';
 
 
@@ -25,6 +25,12 @@ export class Task {
   @Column({ length: 500 })
   comment: string;
 
+  @Column()
+  priority:number;
+
+  @ManyToMany(() => Comment, commentt => commentt.task)
+  commentt: Comment[];
+  
   
 
   @ManyToOne(()=>Teamproject, teamproject=> teamproject.task)

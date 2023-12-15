@@ -77,7 +77,19 @@ findAll() {
     }
   }
 
-  
+  async findTasksByName2(name: string): Promise<Task | null> {
+    try {
+      const task = await this.taskRepository.findOne({
+        where: { name: name },
+      });
+
+      return task || null;
+    } catch (error) {
+      console.error("Error:", error);
+      return null;
+    }
+  }
+
 
  
 }

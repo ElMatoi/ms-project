@@ -10,6 +10,9 @@ import { getProjectUser } from "./dto/getProjectUser.dto";
 import { getTaskProject } from "./dto/getTaskProject.dto";
 import { DeleteTeamProject } from "./dto/deleteTeamProject.dto";
 import { DeleteTaskProject } from "./dto/deleteTaskProject.dto";
+import { newCommentDto } from "./dto/newComment.dto";
+import { CommentService } from "src/comments/comments.service";
+import { getCommentTask } from "./dto/getCommentTask.dto";
 import axios from 'axios';
 
 
@@ -20,6 +23,7 @@ export class AuthService{
      private readonly projectsService: ProjectService,
       private readonly tprojService: ProjectTeamService,
       private readonly taskService: TaskService,
+      private readonly commentService: CommentService
       ){} 
       /////////////////////////////////////////////////////////////////////////////////////
       async createProject({name}: CreateProjectDto) {
@@ -89,7 +93,7 @@ export class AuthService{
       
      }
      /////////////////////////////////////////////////////////////////////////////
-      async createTask ({name,email,emailCreator,nameProject,description,startDate,endDate,state,comment}:CreateTaskDto){
+      async createTask ({name,email,emailCreator,nameProject,description,startDate,endDate,state,comment,priority}:CreateTaskDto){
         try {
           const [userResponse, userCreatorResponse] = await Promise.all([
             axios.post('http://localhost:3000/api/v1/auth/catchUser', { email: email }),
@@ -112,7 +116,8 @@ export class AuthService{
           endDate,
           state,
           comment,
-          project
+          project,
+          priority
         })
           return true;
         } catch (error) {
@@ -194,6 +199,50 @@ export class AuthService{
 
 
     }
+
+    async newComment ({email,comment,nameTask}:newCommentDto){
+      try{
+        const userResponse = await axios.post('http://localhost:3000/api/v1/auth/catchUser', {
+        email: email
+
+          
+      });
+      try{
+        const task= await this.taskService.findTasksByName2(nameTask)
+        
+        
+        const createComment= await this.commentService.create({
+          comment,
+          email,
+          task
+
+        })
+        return true;
+      }catch(error){
+        throw new Error('Error, ups algo fallo... no existe la tarea ');
+
+      }
+      }catch(error){
+        throw new Error('Error, ups algo fallo... no existe el usuario ');
+      }
+    }
+    async getCommentTask ({idTask}:getCommentTask){
+     
+      try{
+        const comment= await this.commentService.findCommentsByTaskId(idTask);
+        return comment;
+        
+        
+        
+        
+      }catch(error){
+        throw new Error('Error, ups algo fallo... no existe la tarea ');
+
+      }
+      
+    }
+
+    
     
 
 }
