@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Teamproject } from './entities/teamproject.entity';
 import { CreateTeamProjectDto } from './dto/create-teamproject.dto';
 import { DeleteResult } from 'typeorm';
+import { In } from 'typeorm';
+
 
 
 @Injectable()
@@ -22,7 +24,7 @@ export class ProjectTeamService {
       const projectTeam = await this.teamprojectRepository.findOne({
         where: { project: { id: projectId }},
       });
-  
+      console.log(projectTeam)
       return projectTeam || null;
     } catch (error) {
       
@@ -35,7 +37,7 @@ export class ProjectTeamService {
     try {
       const teamproject = await this.teamprojectRepository.findOne({
         where: { idUserTeam },
-        relations: ['project'], // Si necesitas traer la relación con el proyecto
+        relations: ['project'], 
       });
 
       return teamproject || null;
@@ -44,34 +46,29 @@ export class ProjectTeamService {
       return null;
     }
   }
+  async findAllByUserTeamIds(idUserTeamIds: number[]): Promise<Teamproject[]> {
+    try {
+        
+        const teamprojects = await this.teamprojectRepository.find({
+            where: {
+                idUserTeam: In(idUserTeamIds), 
+            },
+            
+        });
 
+        return teamprojects; 
+    } catch (error) {
+        console.error('Error al buscar Teamprojects por idUserTeamIds: ', error);
+        throw error; 
+    }}
 
 
 
   
-  async findUserTeamIdAndProjectId(userTeamId: number): Promise<any[]> {
-    try {
-        const teamprojects = await this.teamprojectRepository.find({
-            where: { idUserTeam: userTeamId },
-            relations: ['project']
-        });
+  
 
-        const result = teamprojects.map(tp => ({
-            teamProjectId: tp.id,
-            teamProjectDescription: tp.description,
-            teamProjectStartDate: tp.startDate,
-            teamProjectEndDate: tp.endDate,
-            teamProjectProjectId: tp.project.id,
-            teamProjectUserId: tp.idUserTeam,
-            projectName: tp.project.name
-        }));
 
-        return result;
-    } catch (error) {
-        console.error("Error  ", error);
-        return null;
-    }
-}
+
 
 
 async remove(idTeamProject: number): Promise<DeleteResult> {
