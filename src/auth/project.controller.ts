@@ -5,6 +5,7 @@ import { TeamProjectDto } from "./dto/teamProject.dto";
 import { CreateTaskDto } from "./dto/createTask.dto";
 import { getProjectUser } from "./dto/getProjectUser.dto";
 import { getTaskProject } from "./dto/getTaskProject.dto";
+import { DeleteTeamProject } from "./dto/deleteTeamProject.dto";
 
 
 @Controller('auth') 
@@ -80,8 +81,19 @@ async getTaskProject(
         throw new HttpException('Error al obtener tareas del projecto', HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
+@Post('deleteTeamProject')
+async deleteTeamProject(
+    @Body() deleteteamproject: DeleteTeamProject
+) {
+    try {
+        const taskproject = await this.authService.deleteTeamProject(deleteteamproject);
+        return taskproject
+    } catch (error) {
+        console.error('Error no hay team:', error);
+        throw new HttpException('Error ', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+}
    
-    
     
     
 }

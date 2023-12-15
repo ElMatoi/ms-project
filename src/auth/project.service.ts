@@ -8,6 +8,7 @@ import { TaskService } from "src/tasks/task.services";
 import { CreateTaskDto } from "./dto/createTask.dto";
 import { getProjectUser } from "./dto/getProjectUser.dto";
 import { getTaskProject } from "./dto/getTaskProject.dto";
+import { DeleteTeamProject } from "./dto/deleteTeamProject.dto";
 import axios from 'axios';
 
 
@@ -78,10 +79,6 @@ export class AuthService{
             console.error("Error no hay projecto creado ", error);
           }
           
-          
-
-          
-
         } catch (error) {
           console.error(error);
           
@@ -158,7 +155,7 @@ export class AuthService{
     /////////////////////////////////////////////////////////////////
     async getTaskProject({idTeamProject}:getTaskProject){
       try{
-        const taskproject= await this.taskService.findTaskWithTeamProjectAttributes(idTeamProject);
+        const taskproject= await this.taskService.findTasksByTeamprojectId(idTeamProject)
         return taskproject;
 
       }catch(error){
@@ -166,6 +163,17 @@ export class AuthService{
 
       }
 
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    async deleteTeamProject({idUserTeam}:DeleteTeamProject){
+      try{
+        await this.tprojService.deleteByUserTeamId(idUserTeam)
+        
+
+      }catch(error){
+        throw new Error('Error, ups algo fallo... ');
+      }
     }
     
 

@@ -29,42 +29,19 @@ export class TaskService {
     }
   }  
   
-  async findTaskWithTeamProjectAttributes(teamProjectId: number): Promise<any | null> {
+  async findTasksByTeamprojectId(teamprojectId: number): Promise<Task[] | null> {
     try {
-      const task = await this.taskRepository.findOne({
-        where: { teamproject: { id: teamProjectId }},
-        relations: ['teamproject'], 
+      const tasks = await this.taskRepository.find({
+        where: { teamproject: { id: teamprojectId } },
       });
-  
-      if (!task || !task.teamproject) {
-        return null;
-      }
-  
-      const result = {
-        teamProjectId: task.teamproject.id,
-        teamProjectDescription: task.teamproject.description,
-        teamProjectStartDate: task.teamproject.startDate,
-        teamProjectEndDate: task.teamproject.endDate,
-        teamProjectProjectId: task.teamproject.project?.id, 
-        teamProjectUserId: task.teamproject.idUserTeam,
-        projectName: task.teamproject.project?.name, 
-        taskId: task.id,
-        taskName: task.name,
-        taskDescription: task.description,
-        taskStartDate: task.startDate,
-        taskEndDate: task.endDate,
-        taskState: task.state,
-        taskComment: task.comment,
-        taskUserIdCharge: task.iduserCharge,
-        taskUserIdCreator: task.iduserCreator,
-      };
-  
-      return result;
+
+      return tasks || [];
     } catch (error) {
-      console.error(error);
+      console.error("Error:", error);
       return null;
     }
   }
+
   
 
 

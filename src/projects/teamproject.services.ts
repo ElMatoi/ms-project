@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Teamproject } from './entities/teamproject.entity';
@@ -54,6 +54,22 @@ export class ProjectTeamService {
         console.error("Error  ", error);
         return null;
     }
+}
+
+
+
+
+async deleteByUserTeamId(userTeamId: number): Promise<void> {
+  try {
+    const result = await this.teamprojectRepository.delete({ idUserTeam: userTeamId });
+
+    if (result.affected === 0) {
+      throw new NotFoundException(`Error, no se encontro el team`);
+    }
+  } catch (error) {
+    console.error('Error al eliminar registros en Teamproject por userTeamId:', error);
+    throw error; 
+  }
 }
 
 

@@ -30,6 +30,6 @@ export class Teamproject {
 
   
  
-  @ManyToMany(() => Task, task => task.teamproject)
+  @ManyToMany(() => Task, task => task.teamproject,{cascade:true})
   task: Task[];
 }
